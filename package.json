@@ -1,6 +1,6 @@
 {
   "name": "license-text-normalizer",
-  "version": "1.0.2",
+  "version": "1.0.0",
   "description": "License Text Normalizer",
   "main": "build/index",
   "types": "build/index.d.ts",
@@ -15,7 +15,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.qualcomm.com/qosp/license-text-normalizer-js.git"
+    "url": "git+https://github.com/quic/license-text-normalizer-js.git"
   },
   "license": "BSD-3-Clause",
   "keywords": [
