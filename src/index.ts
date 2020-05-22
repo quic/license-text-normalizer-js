@@ -28,19 +28,32 @@ const DEFAULT_CONTROL_CHARACTERS = [
 
 type Delimiter = string;
 
+interface NormalizeLicenseTextOptions {
+  leadingDelimiters: Delimiter[];
+  bulletDelimiters: Delimiter[];
+  trailingDelimiters: Delimiter[];
+  controlCharacters: string[];
+}
+
+const defaultOptions: NormalizeLicenseTextOptions = {
+  leadingDelimiters: DEFAULT_LEADING_DELIMITERS,
+  bulletDelimiters: DEFAULT_BULLET_DELIMITERS,
+  trailingDelimiters: DEFAULT_TRAILING_DELIMITERS,
+  controlCharacters: DEFAULT_CONTROL_CHARACTERS,
+};
+
 export default normalizeLicenseText;
 
 export function normalizeLicenseText(
   text: string,
-  _leadingDelimiters: Delimiter[] = DEFAULT_LEADING_DELIMITERS,
-  _bulletDelimiters: Delimiter[] = DEFAULT_BULLET_DELIMITERS,
-  _trailingDelimiters: Delimiter[] = DEFAULT_TRAILING_DELIMITERS,
-  controlCharacters: string[] = DEFAULT_CONTROL_CHARACTERS,
+  options: Partial<NormalizeLicenseTextOptions> = {},
 ): string {
+  const config = {...defaultOptions, ...options};
+  const {controlCharacters} = config;
   // sort delimiters, longest-to-shortest
-  const leadingDelimiters = _leadingDelimiters.sort(byLength).reverse();
-  const bulletDelimiters = _bulletDelimiters.sort(byLength).reverse();
-  const trailingDelimiters = _trailingDelimiters.sort(byLength).reverse();
+  const leadingDelimiters = config.leadingDelimiters.sort(byLength).reverse();
+  const bulletDelimiters = config.bulletDelimiters.sort(byLength).reverse();
+  const trailingDelimiters = config.trailingDelimiters.sort(byLength).reverse();
   // create lookup to catch standalone delimiters
   const delimitersLookup = new Set([
     ...leadingDelimiters,

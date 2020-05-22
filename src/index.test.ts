@@ -24,26 +24,28 @@ describe('Normalize License Text', () => {
 
   it('should normalize license text with custom leading delimiters', () => {
     const raw = 'XXX\nCopyright 2010 Google Inc. All Rights Reserved.';
-    expect(normalizeLicenseText(raw, ['XXX'])).toEqual(
+    expect(normalizeLicenseText(raw, {leadingDelimiters: ['XXX']})).toEqual(
       'Copyright 2010 Google Inc. All Rights Reserved.',
     );
   });
 
   it('should normalize license text with custom bullet delimiters', () => {
     const raw = 'Copyright 2010 Google Inc.\n @@@ Hi\nAll Rights Reserved.';
-    expect(normalizeLicenseText(raw, [], ['@@@'])).toEqual(
+    expect(normalizeLicenseText(raw, {bulletDelimiters: ['@@@']})).toEqual(
       'Copyright 2010 Google Inc.\nHi\nAll Rights Reserved.',
     );
   });
 
   it('should normalize license text with custom trailing delimiters', () => {
     const raw = 'Copyright 2010 Google Inc. All Rights Reserved.\nXXX';
-    expect(normalizeLicenseText(raw, [], [], ['XXX'])).toEqual(
+    expect(normalizeLicenseText(raw, {trailingDelimiters: ['XXX']})).toEqual(
       'Copyright 2010 Google Inc. All Rights Reserved.',
     );
   });
 
   it('should normalize license text with custom control characters', () => {
-    expect(normalizeLicenseText('FOOD', [], [], [], ['D'])).toEqual('FOO');
+    expect(normalizeLicenseText('FOOD', {controlCharacters: ['D']})).toEqual(
+      'FOO',
+    );
   });
 });
