@@ -22,6 +22,9 @@ const DEFAULT_LEADING_DELIMITERS = [
 ];
 const DEFAULT_BULLET_DELIMITERS = ['*', '-'];
 const DEFAULT_TRAILING_DELIMITERS = ['*/', '*;', '*'];
+const DEFAULT_CONTROL_CHARACTERS = [
+  '\0', // null char
+];
 
 type Delimiter = string;
 
@@ -32,13 +35,17 @@ export function normalizeLicenseText(
   _leadingDelimiters: Delimiter[] = DEFAULT_LEADING_DELIMITERS,
   _bulletDelimiters: Delimiter[] = DEFAULT_BULLET_DELIMITERS,
   _trailingDelimiters: Delimiter[] = DEFAULT_TRAILING_DELIMITERS,
+  controlCharacters: string[] = DEFAULT_CONTROL_CHARACTERS,
 ): string {
   // sort delimiters, longest-to-shortest
   const leadingDelimiters = _leadingDelimiters.sort(byLength).reverse();
   const bulletDelimiters = _bulletDelimiters.sort(byLength).reverse();
   const trailingDelimiters = _trailingDelimiters.sort(byLength).reverse();
   // create lookup to catch standalone delimiters
-  const delimitersLookup = new Set([...leadingDelimiters, ...trailingDelimiters]);
+  const delimitersLookup = new Set([
+    ...leadingDelimiters,
+    ...trailingDelimiters,
+  ]);
 
   const normalizedLines = [];
   let prevLine = '';
@@ -47,7 +54,7 @@ export function normalizeLicenseText(
     let normalizedLine = line.trim();
     // strip standalone delimiter
     if (delimitersLookup.has(normalizedLine)) {
-      normalizedLine = "";
+      normalizedLine = '';
     }
 
     // strip trailing, leading, bullet delimiters
@@ -60,8 +67,11 @@ export function normalizeLicenseText(
 
     // strip lines of repeating non-alnum characters
     if (isRepeatedNonAlNum(normalizedLine)) {
-      normalizedLine = ""
+      normalizedLine = '';
     }
+
+    // strip control characters
+    normalizedLine = stripControlCharacters(normalizedLine, controlCharacters);
 
     // drop excess (repeated) blank lines
     if (normalizedLine || prevLine) {
@@ -72,6 +82,20 @@ export function normalizeLicenseText(
   }
 
   return normalizedLines.join('\n').trim();
+}
+
+function stripControlCharacters(line: string, characters: string[]): string {
+  for (let i = 0; i < line.length; i++) {
+    if (characters.includes(line.charAt(i))) {
+      const lineBeforeChar = line.slice(0, i);
+      const isLastChar = i === line.length - 1;
+      const lineAfterChar = isLastChar
+        ? ''
+        : stripControlCharacters(line.slice(i + 1), characters);
+      return lineBeforeChar + lineAfterChar;
+    }
+  }
+  return line;
 }
 
 function stripLeadingDelimiters(line: string, delimiters: Delimiter[]): string {
