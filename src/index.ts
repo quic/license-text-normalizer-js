@@ -4,7 +4,9 @@
 import splitLines from 'split-lines';
 import isAlNum from 'is-alphanumerical';
 
-const DEFAULT_LEADING_DELIMITERS = [
+type Delimiter = string;
+
+const DEFAULT_LEADING_DELIMITERS: Delimiter[] = [
   '@REM #',
   '.\\"',
   '///',
@@ -20,25 +22,45 @@ const DEFAULT_LEADING_DELIMITERS = [
   '*',
   '-',
 ];
-const DEFAULT_BULLET_DELIMITERS = ['*', '-'];
-const DEFAULT_TRAILING_DELIMITERS = ['*/', '*;', '*'];
+const DEFAULT_BULLET_DELIMITERS: Delimiter[] = ['*', '-'];
+const DEFAULT_TRAILING_DELIMITERS: Delimiter[] = ['*/', '*;', '*'];
+const DEFAULT_WORDS_TO_STRIP: string[] = [
+  '\0', // null char
+];
 
-type Delimiter = string;
+interface NormalizeLicenseTextOptions {
+  leadingDelimiters: Delimiter[];
+  bulletDelimiters: Delimiter[];
+  trailingDelimiters: Delimiter[];
+  wordsToStrip: string[];
+}
+
+const defaultOptions: NormalizeLicenseTextOptions = {
+  leadingDelimiters: DEFAULT_LEADING_DELIMITERS,
+  bulletDelimiters: DEFAULT_BULLET_DELIMITERS,
+  trailingDelimiters: DEFAULT_TRAILING_DELIMITERS,
+  wordsToStrip: DEFAULT_WORDS_TO_STRIP,
+};
 
 export default normalizeLicenseText;
 
 export function normalizeLicenseText(
   text: string,
-  _leadingDelimiters: Delimiter[] = DEFAULT_LEADING_DELIMITERS,
-  _bulletDelimiters: Delimiter[] = DEFAULT_BULLET_DELIMITERS,
-  _trailingDelimiters: Delimiter[] = DEFAULT_TRAILING_DELIMITERS,
+  options: Partial<NormalizeLicenseTextOptions> = {},
 ): string {
+  const config = {...defaultOptions, ...options};
+
   // sort delimiters, longest-to-shortest
-  const leadingDelimiters = _leadingDelimiters.sort(byLength).reverse();
-  const bulletDelimiters = _bulletDelimiters.sort(byLength).reverse();
-  const trailingDelimiters = _trailingDelimiters.sort(byLength).reverse();
+  const leadingDelimiters = config.leadingDelimiters.sort(byLength).reverse();
+  const bulletDelimiters = config.bulletDelimiters.sort(byLength).reverse();
+  const trailingDelimiters = config.trailingDelimiters.sort(byLength).reverse();
+  const wordsToStrip = config.wordsToStrip.sort(byLength).reverse();
+
   // create lookup to catch standalone delimiters
-  const delimitersLookup = new Set([...leadingDelimiters, ...trailingDelimiters]);
+  const delimitersLookup = new Set([
+    ...leadingDelimiters,
+    ...trailingDelimiters,
+  ]);
 
   const normalizedLines = [];
   let prevLine = '';
@@ -47,7 +69,7 @@ export function normalizeLicenseText(
     let normalizedLine = line.trim();
     // strip standalone delimiter
     if (delimitersLookup.has(normalizedLine)) {
-      normalizedLine = "";
+      normalizedLine = '';
     }
 
     // strip trailing, leading, bullet delimiters
@@ -60,8 +82,11 @@ export function normalizeLicenseText(
 
     // strip lines of repeating non-alnum characters
     if (isRepeatedNonAlNum(normalizedLine)) {
-      normalizedLine = ""
+      normalizedLine = '';
     }
+
+    // strip words
+    normalizedLine = stripWords(normalizedLine, wordsToStrip);
 
     // drop excess (repeated) blank lines
     if (normalizedLine || prevLine) {
@@ -72,6 +97,14 @@ export function normalizeLicenseText(
   }
 
   return normalizedLines.join('\n').trim();
+}
+
+function stripWords(line: string, wordsToStrip: string[]): string {
+  let normalizedLine = line;
+  for (const word of wordsToStrip) {
+    normalizedLine = normalizedLine.split(word).join('');
+  }
+  return normalizedLine;
 }
 
 function stripLeadingDelimiters(line: string, delimiters: Delimiter[]): string {

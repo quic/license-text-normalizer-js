@@ -28,7 +28,7 @@ import { strict as assert } from 'assert';
 import normalizeLicenseText from 'license-text-normalizer';
 
 const text = `XXX\nCopyright 2010 Google Inc. All Rights Reserved.`
-assert(normalizeLicenseText(text, ['XXX']) === 'Copyright 2010 Google Inc. All Rights Reserved.')
+assert(normalizeLicenseText(text, {leadingDelimiters: ['XXX']}) === 'Copyright 2010 Google Inc. All Rights Reserved.')
 ```
 
 ## Development

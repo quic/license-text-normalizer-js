@@ -1,6 +1,6 @@
 {
   "name": "license-text-normalizer",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "description": "License Text Normalizer",
   "main": "build/index",
   "types": "build/index.d.ts",
@@ -41,6 +41,7 @@
     "csv-parse": "^4.8.8",
     "eslint": "^6.8.0",
     "eslint-config-prettier": "^6.10.0",
+    "eslint-plugin-jest": "^23.13.1",
     "eslint-plugin-prettier": "^3.1.2",
     "jest": "^25.1.0",
     "prettier": "^1.19.1",

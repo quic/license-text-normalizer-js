@@ -15,7 +15,7 @@ function loadFixtures(): [string, string][] {
 
 describe('Normalize License Text', () => {
   it('should normalize license text with the default delimiters', () => {
-    expect.assertions(23); // entries in csv
+    expect.assertions(26); // entries in csv
     const fixtures = loadFixtures();
     fixtures.forEach(([raw, normalized]) => {
       expect(normalizeLicenseText(raw)).toEqual(normalized);
@@ -24,16 +24,30 @@ describe('Normalize License Text', () => {
 
   it('should normalize license text with custom leading delimiters', () => {
     const raw = 'XXX\nCopyright 2010 Google Inc. All Rights Reserved.';
-    expect(normalizeLicenseText(raw, ['XXX'])).toEqual('Copyright 2010 Google Inc. All Rights Reserved.');
+    expect(normalizeLicenseText(raw, {leadingDelimiters: ['XXX']})).toEqual(
+      'Copyright 2010 Google Inc. All Rights Reserved.',
+    );
   });
 
   it('should normalize license text with custom bullet delimiters', () => {
     const raw = 'Copyright 2010 Google Inc.\n @@@ Hi\nAll Rights Reserved.';
-    expect(normalizeLicenseText(raw, [], ['@@@'])).toEqual('Copyright 2010 Google Inc.\nHi\nAll Rights Reserved.');
+    expect(normalizeLicenseText(raw, {bulletDelimiters: ['@@@']})).toEqual(
+      'Copyright 2010 Google Inc.\nHi\nAll Rights Reserved.',
+    );
   });
 
   it('should normalize license text with custom trailing delimiters', () => {
     const raw = 'Copyright 2010 Google Inc. All Rights Reserved.\nXXX';
-    expect(normalizeLicenseText(raw, [], [], ['XXX'])).toEqual('Copyright 2010 Google Inc. All Rights Reserved.');
+    expect(normalizeLicenseText(raw, {trailingDelimiters: ['XXX']})).toEqual(
+      'Copyright 2010 Google Inc. All Rights Reserved.',
+    );
+  });
+
+  it('should normalize license text with custom words to strip', () => {
+    expect(
+      normalizeLicenseText('FOO<br>BAR<br>', {
+        wordsToStrip: ['br', '<br>'], // ensure longest words stripped first
+      }),
+    ).toEqual('FOOBAR');
   });
 });
