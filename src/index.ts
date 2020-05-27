@@ -5,7 +5,6 @@ import splitLines from 'split-lines';
 import isAlNum from 'is-alphanumerical';
 
 type Delimiter = string;
-type ControlCharacter = string;
 
 const DEFAULT_LEADING_DELIMITERS: Delimiter[] = [
   '@REM #',
@@ -25,7 +24,7 @@ const DEFAULT_LEADING_DELIMITERS: Delimiter[] = [
 ];
 const DEFAULT_BULLET_DELIMITERS: Delimiter[] = ['*', '-'];
 const DEFAULT_TRAILING_DELIMITERS: Delimiter[] = ['*/', '*;', '*'];
-const DEFAULT_CONTROL_CHARACTERS: ControlCharacter[] = [
+const DEFAULT_WORDS_TO_STRIP: string[] = [
   '\0', // null char
 ];
 
@@ -33,14 +32,14 @@ interface NormalizeLicenseTextOptions {
   leadingDelimiters: Delimiter[];
   bulletDelimiters: Delimiter[];
   trailingDelimiters: Delimiter[];
-  controlCharacters: ControlCharacter[];
+  wordsToStrip: string[];
 }
 
 const defaultOptions: NormalizeLicenseTextOptions = {
   leadingDelimiters: DEFAULT_LEADING_DELIMITERS,
   bulletDelimiters: DEFAULT_BULLET_DELIMITERS,
   trailingDelimiters: DEFAULT_TRAILING_DELIMITERS,
-  controlCharacters: DEFAULT_CONTROL_CHARACTERS,
+  wordsToStrip: DEFAULT_WORDS_TO_STRIP,
 };
 
 export default normalizeLicenseText;
@@ -50,11 +49,13 @@ export function normalizeLicenseText(
   options: Partial<NormalizeLicenseTextOptions> = {},
 ): string {
   const config = {...defaultOptions, ...options};
-  const {controlCharacters} = config;
+
   // sort delimiters, longest-to-shortest
   const leadingDelimiters = config.leadingDelimiters.sort(byLength).reverse();
   const bulletDelimiters = config.bulletDelimiters.sort(byLength).reverse();
   const trailingDelimiters = config.trailingDelimiters.sort(byLength).reverse();
+  const wordsToStrip = config.wordsToStrip.sort(byLength).reverse();
+
   // create lookup to catch standalone delimiters
   const delimitersLookup = new Set([
     ...leadingDelimiters,
@@ -84,8 +85,8 @@ export function normalizeLicenseText(
       normalizedLine = '';
     }
 
-    // strip control characters
-    normalizedLine = stripControlCharacters(normalizedLine, controlCharacters);
+    // strip words
+    normalizedLine = stripWords(normalizedLine, wordsToStrip);
 
     // drop excess (repeated) blank lines
     if (normalizedLine || prevLine) {
@@ -98,21 +99,12 @@ export function normalizeLicenseText(
   return normalizedLines.join('\n').trim();
 }
 
-function stripControlCharacters(
-  line: string,
-  characters: ControlCharacter[],
-): string {
-  const controlCharPositions: number[] = [];
-  for (let charIndex = 0; charIndex < line.length; charIndex++) {
-    if (characters.includes(line.charAt(charIndex))) {
-      controlCharPositions.push(charIndex);
-    }
+function stripWords(line: string, wordsToStrip: string[]): string {
+  let normalizedLine = line;
+  for (const word of wordsToStrip) {
+    normalizedLine = normalizedLine.split(word).join('');
   }
-  return controlCharPositions.length
-    ? Array.from(line)
-        .filter((_char, charIndex) => !controlCharPositions.includes(charIndex))
-        .join('')
-    : line;
+  return normalizedLine;
 }
 
 function stripLeadingDelimiters(line: string, delimiters: Delimiter[]): string {

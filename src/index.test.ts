@@ -43,9 +43,11 @@ describe('Normalize License Text', () => {
     );
   });
 
-  it('should normalize license text with custom control characters', () => {
-    expect(normalizeLicenseText('FOOD', {controlCharacters: ['D']})).toEqual(
-      'FOO',
-    );
+  it('should normalize license text with custom words to strip', () => {
+    expect(
+      normalizeLicenseText('FOO<br>BAR<br>', {
+        wordsToStrip: ['br', '<br>'], // ensure longest words stripped first
+      }),
+    ).toEqual('FOOBAR');
   });
 });
