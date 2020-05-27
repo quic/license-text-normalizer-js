@@ -4,7 +4,10 @@
 import splitLines from 'split-lines';
 import isAlNum from 'is-alphanumerical';
 
-const DEFAULT_LEADING_DELIMITERS = [
+type Delimiter = string;
+type ControlCharacter = string;
+
+const DEFAULT_LEADING_DELIMITERS: Delimiter[] = [
   '@REM #',
   '.\\"',
   '///',
@@ -20,19 +23,17 @@ const DEFAULT_LEADING_DELIMITERS = [
   '*',
   '-',
 ];
-const DEFAULT_BULLET_DELIMITERS = ['*', '-'];
-const DEFAULT_TRAILING_DELIMITERS = ['*/', '*;', '*'];
-const DEFAULT_CONTROL_CHARACTERS = [
+const DEFAULT_BULLET_DELIMITERS: Delimiter[] = ['*', '-'];
+const DEFAULT_TRAILING_DELIMITERS: Delimiter[] = ['*/', '*;', '*'];
+const DEFAULT_CONTROL_CHARACTERS: ControlCharacter[] = [
   '\0', // null char
 ];
-
-type Delimiter = string;
 
 interface NormalizeLicenseTextOptions {
   leadingDelimiters: Delimiter[];
   bulletDelimiters: Delimiter[];
   trailingDelimiters: Delimiter[];
-  controlCharacters: string[];
+  controlCharacters: ControlCharacter[];
 }
 
 const defaultOptions: NormalizeLicenseTextOptions = {
@@ -97,18 +98,21 @@ export function normalizeLicenseText(
   return normalizedLines.join('\n').trim();
 }
 
-function stripControlCharacters(line: string, characters: string[]): string {
-  for (let i = 0; i < line.length; i++) {
-    if (characters.includes(line.charAt(i))) {
-      const lineBeforeChar = line.slice(0, i);
-      const isLastChar = i === line.length - 1;
-      const lineAfterChar = isLastChar
-        ? ''
-        : stripControlCharacters(line.slice(i + 1), characters);
-      return lineBeforeChar + lineAfterChar;
+function stripControlCharacters(
+  line: string,
+  characters: ControlCharacter[],
+): string {
+  const controlCharPositions: number[] = [];
+  for (let charIndex = 0; charIndex < line.length; charIndex++) {
+    if (characters.includes(line.charAt(charIndex))) {
+      controlCharPositions.push(charIndex);
     }
   }
-  return line;
+  return controlCharPositions.length
+    ? Array.from(line)
+        .filter((_char, charIndex) => !controlCharPositions.includes(charIndex))
+        .join('')
+    : line;
 }
 
 function stripLeadingDelimiters(line: string, delimiters: Delimiter[]): string {
