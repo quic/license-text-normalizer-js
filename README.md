@@ -9,6 +9,16 @@ A python implementation is also available: https://github.com/quic/license-text-
 * node 10+
 * yarn 1.9+
 
+## Installation
+
+```
+npm install license-text-normalizer --save
+```
+or
+```
+yarn add license-text-normalizer
+```
+
 ## Usage
 
 ### Normalize a license text using the default set of delimiters
