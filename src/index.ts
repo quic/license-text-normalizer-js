@@ -21,11 +21,14 @@ const DEFAULT_LEADING_DELIMITERS: Delimiter[] = [
   '#',
   '*',
   '-',
+  "@echo"
 ];
 const DEFAULT_BULLET_DELIMITERS: Delimiter[] = ['*', '-'];
 const DEFAULT_TRAILING_DELIMITERS: Delimiter[] = ['*/', '*;', '*'];
 const DEFAULT_WORDS_TO_STRIP: string[] = [
   '\0', // null char
+  "echo",
+  "dnl"
 ];
 
 interface NormalizeLicenseTextOptions {
@@ -104,7 +107,7 @@ function stripWords(line: string, wordsToStrip: string[]): string {
   for (const word of wordsToStrip) {
     normalizedLine = normalizedLine.split(word).join('');
   }
-  return normalizedLine;
+  return normalizedLine.trim();
 }
 
 function stripLeadingDelimiters(line: string, delimiters: Delimiter[]): string {
