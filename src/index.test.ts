@@ -15,7 +15,7 @@ function loadFixtures(): [string, string][] {
 
 describe('Normalize License Text', () => {
   it('should normalize license text with the default delimiters', () => {
-    expect.assertions(26); // entries in csv
+    expect.assertions(29); // entries in csv
     const fixtures = loadFixtures();
     fixtures.forEach(([raw, normalized]) => {
       expect(normalizeLicenseText(raw)).toEqual(normalized);
