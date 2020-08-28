@@ -21,14 +21,15 @@ const DEFAULT_LEADING_DELIMITERS: Delimiter[] = [
   '#',
   '*',
   '-',
-  "@echo"
+  '@echo',
 ];
 const DEFAULT_BULLET_DELIMITERS: Delimiter[] = ['*', '-'];
 const DEFAULT_TRAILING_DELIMITERS: Delimiter[] = ['*/', '*;', '*'];
 const DEFAULT_WORDS_TO_STRIP: string[] = [
   '\0', // null char
-  "echo",
-  "dnl"
+  'echo',
+  'dnl',
+  '<BR>',
 ];
 
 interface NormalizeLicenseTextOptions {
