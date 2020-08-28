@@ -84,8 +84,8 @@ export function normalizeLicenseText(
     normalizedLine = stripLeadingDelimiters(normalizedLine, leadingDelimiters);
     normalizedLine = stripLeadingDelimiters(normalizedLine, bulletDelimiters);
 
-    // strip lines of repeating non-alnum characters
-    if (isRepeatedNonAlNum(normalizedLine)) {
+    // strip lines consisting of only non-alphanumerics
+    if (isLineNonAlnum(normalizedLine)) {
       normalizedLine = '';
     }
 
@@ -183,10 +183,10 @@ function byLength(a: string, b: string): number {
   return 0;
 }
 
-function isRepeatedNonAlNum(str: string): boolean {
+function isLineNonAlnum(line: string): boolean {
   // repeated sequence must be at least 2 chars
-  if (str.length <= 1) {
+  if (line.length <= 1) {
     return false;
   }
-  return !isAlNum(first(str)) && !Array.from(str).some(x => x !== first(str));
+  return !Array.from(line).some(isAlNum);
 }
