@@ -45,18 +45,6 @@ assert(normalizeLicenseText(text, {leadingDelimiters: ['XXX']}) === 'Copyright 2
 
 See [CONTRIBUTING.md](CONTRIBUTING.md) for more information.
 
-## Releasing
-
-* Update version in package.json, push to master
-* Create a release/tag in GitHub
-* Publish to npm:
-
-```
-npm login
-npm publish
-```
-
-
 ## License
 
 License Text Normalizer is licensed under the BSD 3-clause “New” or “Revised” License. See [LICENSE](LICENSE) for the full license text.

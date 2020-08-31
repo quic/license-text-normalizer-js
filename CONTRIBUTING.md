@@ -72,3 +72,12 @@
 * Keep PRs small and focused
 * Write a [good commit message](https://tbaggery.com/2008/04/19/a-note-about-git-commit-messages.html)
 * Every commit must be signed-off with the [Developer Certificate of Origin](https://developercertificate.org/) (by adding the -s option to your git commit command, e.g. `git commit -s`). This adds a line at the end of your commit, e.g. "Signed-off-by: Your Name <your@email.com>", which certifies that you wrote or otherwise have the right to submit the contribution.
+
+## Releasing
+
+Release instructions for maintainers:
+
+* Update version in package.json, push to master
+* Create a release/tag in GitHub
+* `npm login`
+* `npm publish`
