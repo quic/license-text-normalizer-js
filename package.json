@@ -50,6 +50,7 @@
   },
   "dependencies": {
     "is-alphanumerical": "^1.0.4",
+    "repolinter": "^0.8.2",
     "split-lines": "^2.0.0"
   }
 }

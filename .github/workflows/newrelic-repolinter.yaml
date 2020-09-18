@@ -1,0 +1,16 @@
+name: 'Validate master branch with Repolinter'
+
+on: [push]
+
+jobs:
+  repolinter-action:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repo
+        uses: actions/checkout@v2
+      - name: 'Run Repolinter'
+        uses: newrelic/repolinter-action@v1
+        with:
+            config_file: quic-newrelic-repolint.json
+        # with:
+        #    config_url: https://raw.githubusercontent.com/craigez/license-text-normalizer-js/test_repolinter_action/quic-repolint.json
