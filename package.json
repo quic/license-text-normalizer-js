@@ -1,6 +1,6 @@
 {
   "name": "license-text-normalizer",
-  "version": "2.1.0",
+  "version": "2.2.0",
   "description": "License Text Normalizer",
   "main": "build/index",
   "types": "build/index.d.ts",
