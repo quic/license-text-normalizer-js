@@ -30,6 +30,7 @@ const DEFAULT_WORDS_TO_STRIP: string[] = [
   'echo',
   'dnl',
   '<BR>',
+  '\\x00',
 ];
 
 interface NormalizeLicenseTextOptions {
