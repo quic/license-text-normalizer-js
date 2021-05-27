@@ -12,9 +12,9 @@
 * `yarn install`
 * `yarn test`
 * `yarn test --coverage`
-* `yarn build`
 * `yarn lint`
 * `yarn lint-and-fix`
+* `yarn build`
 
 ### Sample Workflow
 
