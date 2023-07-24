@@ -22,6 +22,7 @@ const DEFAULT_LEADING_DELIMITERS: Delimiter[] = [
   '*',
   '-',
   '@echo',
+  '/',
 ];
 const DEFAULT_BULLET_DELIMITERS: Delimiter[] = ['*', '-'];
 const DEFAULT_TRAILING_DELIMITERS: Delimiter[] = ['*/', '*;', '*'];
