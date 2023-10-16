@@ -2,7 +2,7 @@
 
 Library that provides license text normalization functionality in JavaScript.
 
-A python implementation is also available: https://github.com/quic/license-text-normalizer
+A python implementation is also available: https://github.com/quic/license-text-normalizer.
 
 ## Requirements
 
