@@ -14,7 +14,9 @@ A python implementation is also available: https://github.com/quic/license-text-
 ```
 npm install license-text-normalizer --save
 ```
+
 or
+
 ```
 yarn add license-text-normalizer
 ```
