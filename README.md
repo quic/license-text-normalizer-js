@@ -1,4 +1,4 @@
-# License Text Normalizer
+# License Text Normalizer test
 
 Library that provides license text normalization functionality in JavaScript.
 
