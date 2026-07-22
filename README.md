@@ -6,7 +6,7 @@ A python implementation is also available: https://github.com/quic/license-text-
 
 ## Requirements
 
-* node 10+
+* node 20+
 * yarn 1.9+
 
 ## Installation

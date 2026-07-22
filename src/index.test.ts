@@ -4,12 +4,11 @@
 import normalizeLicenseText from './index';
 import fs from 'fs';
 import path from 'path';
-import parse from 'csv-parse/lib/sync';
+import {parse} from 'csv-parse/sync';
 
 function loadFixtures(): [string, string][] {
   const csvPath = path.join(__dirname, '..', 'fixtures.csv');
   const csvFile = fs.readFileSync(csvPath);
-  // eslint-disable-next-line @typescript-eslint/camelcase
   return parse(csvFile, {from_line: 2}); // skip headers
 }
 
